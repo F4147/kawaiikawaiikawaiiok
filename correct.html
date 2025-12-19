@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正解</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --snow-white: #FFFEFA;
+            --deep-green: #2C5F4E;
+            --gold-accent: #D4AF37;
+            --berry-red: #A0393F;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a4d3e 0%, #2C5F4E 50%, #1a3d32 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ========================================
+           ★★★ 背景画像の設定 ★★★
+           下のコメントを解除して、ファイル名を変更してください
+           ======================================== */
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        /* 使用例：<img src="正解ページ背景.jpg" alt="" class="background-image"> */
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            animation: zoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 20px;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+        }
+
+        .message {
+            font-size: 1.5em;
+            color: var(--deep-green);
+            line-height: 1.8;
+            font-weight: 600;
+            white-space: pre-line;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .result-wrapper {
+                padding: 30px 35px;
+            }
+
+            .message {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================
+         ★★★ 背景画像を追加する場合 ★★★
+         下の行のコメントを外して、ファイル名を変更してください
+         例：<img src="正解ページ背景.jpg" alt="" class="background-image">
+         ======================================== -->
+    <!-- <img src="背景画像ファイル名.jpg" alt="" class="background-image"> -->
+
+    <div class="container">
+        <div class="result-wrapper">
+            <!-- ========================================
+                 ★★★ 表示する文言の設定 ★★★
+                 下のテキストを変更してください
+                 改行したい場合はそのまま改行してください
+                 ======================================== -->
+            <p class="message">おめでとうございます！
+正解です！</p>
+        </div>
+    </div>
+</body>
+</html>

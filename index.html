@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クリスマスクイズ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --snow-white: #FFFEFA;
+            --deep-green: #2C5F4E;
+            --gold-accent: #D4AF37;
+            --berry-red: #A0393F;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a4d3e 0%, #2C5F4E 50%, #1a3d32 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ========================================
+           ★★★ 背景画像の設定 ★★★
+           下のコメントを解除して、ファイル名を変更してください
+           ======================================== */
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        /* 使用例：<img src="背景画像.jpg" alt="" class="background-image"> */
+
+        /* 背景の雪の結晶アニメーション */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.5em;
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        /* 跳ね回る画像 */
+        .bouncing-image {
+            position: absolute;
+            width: 100px;
+            height: auto;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+            padding: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            max-width: 500px;
+        }
+
+        .input-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--berry-red), var(--gold-accent), var(--deep-green));
+        }
+
+        .decorative-element {
+            font-size: 2em;
+            margin-bottom: 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 25px;
+            font-size: 1.1em;
+            font-family: 'Crimson Text', serif;
+            border: 3px solid var(--deep-green);
+            border-radius: 50px;
+            outline: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: var(--snow-white);
+            color: var(--deep-green);
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+            transform: scale(1.02);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(44, 95, 78, 0.5);
+        }
+
+        .submit-button {
+            width: 100%;
+            max-width: 400px;
+            padding: 14px 35px;
+            font-size: 1.1em;
+            font-family: 'Crimson Text', serif;
+            color: var(--snow-white);
+            background: var(--deep-green);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .submit-button:hover {
+            background: var(--gold-accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            color: var(--berry-red);
+            margin-top: 20px;
+            font-size: 1.1em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-weight: 600;
+        }
+
+        .error-message.show {
+            opacity: 1;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .input-wrapper {
+                padding: 30px 25px;
+            }
+
+            input[type="text"], .submit-button {
+                max-width: 100%;
+                font-size: 1em;
+                padding: 12px 18px;
+            }
+
+            .decorative-element {
+                font-size: 1.5em;
+            }
+
+            .bouncing-image {
+                width: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================
+         ★★★ 背景画像を追加する場合 ★★★
+         下の行のコメントを外して、ファイル名を変更してください
+         例：<img src="入力ページ背景.jpg" alt="" class="background-image">
+         ======================================== -->
+    <!-- <img src="背景画像ファイル名.jpg" alt="" class="background-image"> -->
+
+    <!-- ========================================
+         ★★★ 跳ね回る画像 ★★★
+         ファイル名を「被写体.PNG」にするか、下のsrcを変更してください
+         ======================================== -->
+    <img src="被写体.PNG" class="bouncing-image" id="bouncingImg" alt="">
+
+    <div class="container">
+        <div class="input-wrapper">
+            <div class="decorative-element">🎄</div>
+            <form id="quizForm">
+                <input 
+                    type="text" 
+                    id="answerInput" 
+                    placeholder="答えを入力してください"
+                    autocomplete="off"
+                    autofocus
+                >
+                <button type="submit" class="submit-button">回答する</button>
+                <div id="errorMessage" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 雪の結晶を生成
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆'];
+            const container = document.body;
+            
+            for (let i = 0; i < 20; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.fontSize = (Math.random() * 1 + 1) + 'em';
+                container.appendChild(snowflake);
+            }
+        }
+
+        createSnowflakes();
+
+        // 画像を跳ね回らせる
+        const img = document.getElementById('bouncingImg');
+        let x = Math.random() * (window.innerWidth - 100);
+        let y = Math.random() * (window.innerHeight - 100);
+        let dx = 3;
+        let dy = 3;
+
+        function animateBounce() {
+            const imgWidth = img.offsetWidth;
+            const imgHeight = img.offsetHeight;
+
+            if (x + imgWidth >= window.innerWidth || x <= 0) {
+                dx = -dx;
+            }
+            if (y + imgHeight >= window.innerHeight || y <= 0) {
+                dy = -dy;
+            }
+
+            x += dx;
+            y += dy;
+
+            img.style.left = x + 'px';
+            img.style.top = y + 'px';
+
+            requestAnimationFrame(animateBounce);
+        }
+
+        animateBounce();
+
+        // ========================================
+        // ★★★ 正解ワードの設定 ★★★
+        // 下の「メリークリスマス」を変更してください
+        // ========================================
+        const CORRECT_ANSWER = 'メリークリスマス';
+        
+        const form = document.getElementById('quizForm');
+        const input = document.getElementById('answerInput');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userAnswer = input.value.trim();
+            
+            if (userAnswer === '') {
+                showError('答えを入力してください');
+                return;
+            }
+
+            // 正解判定
+            if (userAnswer === CORRECT_ANSWER) {
+                window.location.href = 'correct.html';
+            } else {
+                window.location.href = 'incorrect.html';
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            input.style.borderColor = 'var(--berry-red)';
+            
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+                input.style.borderColor = 'var(--deep-green)';
+            }, 2000);
+        }
+
+        input.addEventListener('input', function() {
+            if (errorMessage.classList.contains('show')) {
+                errorMessage.classList.remove('show');
+                input.style.borderColor = 'var(--deep-green)';
+            }
+        });
+    </script>
+</body>
+</html>
